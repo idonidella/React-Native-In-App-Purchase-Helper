@@ -1,0 +1,21 @@
+{
+  "name": "react-native-in-app-purchase-helper",
+  "version": "1.0.3",
+  "description": "In-App Purchase helper for react native cli ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "in-app-purchase",
+    "react-native",
+    "payments",
+    "iap",
+    "react-native-cli",
+    "ios",
+    "android",
+    "purchases"
+  ],
+  "author": "Efekan Efe - Sirius AI",
+  "license": "MIT"
+}
