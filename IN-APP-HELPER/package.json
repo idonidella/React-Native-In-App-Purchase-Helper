@@ -1,6 +1,6 @@
 {
   "name": "react-native-in-app-purchase-helper",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "description": "In-App Purchase helper for react native cli ",
   "main": "index.js",
   "scripts": {

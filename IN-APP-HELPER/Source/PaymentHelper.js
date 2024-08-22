@@ -19,7 +19,6 @@ export async function verifyTransaction(transactionReceipt, ITUNES_SHARED_SECRET
   try {
     const response = await axios.post(url, requestBody);
     const responseData = response.data;
-
     if (responseData.status === 0) {
       return { valid: true, message: 'Purchase is valid.' };
     } else {
@@ -58,13 +57,11 @@ export async function fetchPrices(packageDetails) {
   }
 }
 
-export async function createPaymentMethod(packageId, skus) {
+export async function createPaymentAndroid(skus) {
   try {
     await initConnection();
-    if (Platform.OS === 'android') {
-      flushFailedPurchasesCachedAsPendingAndroid();
-    }
-    const sku = Platform.OS === 'android' ? skus.androidSKUs[0] : skus.iosSKUs[0];
+    await flushFailedPurchasesCachedAsPendingAndroid();
+    const sku = skus.androidSKUs[0]
     const products = await getProducts({ skus: [sku] });
     if (products.length === 0) {
       console.error('Product not found');
@@ -78,6 +75,7 @@ export async function createPaymentMethod(packageId, skus) {
       andDangerouslyFinishTransactionAutomaticallyIOS: false,
     });
     await finishTransaction({ purchase, isConsumable: true });
+    //add your backend logic here
     return purchase;
   } catch (error) {
     console.error('Error during payment creation:', error);
@@ -85,9 +83,9 @@ export async function createPaymentMethod(packageId, skus) {
   }
 }
 
-export async function continuePayment(skus, ITUNES_SHARED_SECRET) {
+export async function createPaymentIOS(skus, ITUNES_SHARED_SECRET) {
   try {
-    const sku = Platform.OS === 'android' ? skus.androidSKUs[0] : skus.iosSKUs[0];
+    const sku = skus.iosSKUs[0];
     const products = await getProducts({ skus: [sku] });
     if (products.length === 0) {
       console.error('Product not found');
@@ -103,9 +101,8 @@ export async function continuePayment(skus, ITUNES_SHARED_SECRET) {
     const transactionReceipt = purchase.transactionReceipt;
     const isVerified = await verifyTransaction(transactionReceipt, ITUNES_SHARED_SECRET);
     if (isVerified.valid) {
-      if (Platform.OS === 'ios') {
         await finishTransaction({ purchase });
-      }
+      //add your backend logic here
       return purchase;
     } else {
       throw new Error('Payment could not be verified.');
